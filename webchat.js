@@ -8,6 +8,7 @@ $(document).ready(function () {
     $('#refreshChat').click(refresh);
     
     var input = document.getElementById("textinput");
+
     // Respond to enter key
     input.addEventListener("keyup", function(event) {
       // Number 13 is the "Enter" key on the keyboard
@@ -19,8 +20,8 @@ $(document).ready(function () {
       }
     });
 
-
-    id=makeid(10);
+    //id = document.getElementById("idinput");
+    id = $('#idinput').val();
     console.log("ID:",id);
 
 });
@@ -59,6 +60,7 @@ function sendText() {
   if(!power)return;
   // Get the text from the text box
   inText = $('#textinput').val();
+  id = $('#idinput').val();
   // Clear the input text
   $('#textinput').val("");
 
