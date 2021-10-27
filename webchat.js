@@ -1,9 +1,12 @@
 var id;
+var power= true;
 
 $(document).ready(function () {
     $('#sendText').click(sendText);
     $('#checkText').click(sendText);
-
+    $('#stopChat').click(toggleChat);
+    $('#refreshChat').click(refresh);
+    
     var input = document.getElementById("textinput");
     // Respond to enter key
     input.addEventListener("keyup", function(event) {
@@ -21,6 +24,17 @@ $(document).ready(function () {
     console.log("ID:",id);
 
 });
+
+function toggleChat(){
+  power = !power;
+  if(!power){
+    $('#chatBox').css( "border", "3px solid red" ).css( "filter", "grayscale(70%)" )
+    $('#stopChat').attr("value","Start");
+  }else{
+    $('#chatBox').css( "border", "3px solid lightgreen" ).css( "filter", "grayscale(0%)" )
+    $('#stopChat').attr("value","Stop");
+  }
+}
 
 function makeid(length) {
    var result           = '';
@@ -42,6 +56,7 @@ function updateScroll(){
  // Respond to send button
 function sendText() {
   console.log("sendText");
+  if(!power)return;
   // Get the text from the text box
   inText = $('#textinput').val();
   // Clear the input text
@@ -52,6 +67,23 @@ function sendText() {
   updateScroll();
 
   message=inText.replace("","+");
+  $.ajax(
+    {
+    type: "get",
+    url: "/cgi-bin/team1_webchat.py?message=" + message + "&id="+id,
+    dataType: "text",
+    success:  processResults,
+    error: function(request, ajaxOptions, thrownError)
+    {
+        $("#debug").text("error with get:"+request+thrownError);
+    }
+  });
+}
+
+function refresh(){
+  message ="------"
+  id="REFRESHING"
+  updateScroll();
   $.ajax(
     {
     type: "get",
